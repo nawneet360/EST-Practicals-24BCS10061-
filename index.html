@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Stack Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --dark-bg: #1a1a2e;
+            --light-bg: #f8f9fa;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --success: #00b894;
+            --danger: #d63031;
+            --warning: #fdcb6e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        header {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-top {
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        nav {
+            background: var(--dark-bg);
+            padding: 0 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color);
+        }
+
+        .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page {
+            display: none;
+            animation: slideIn 0.4s ease-in;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HOME PAGE ===== */
+        .hero {
+            background: white;
+            border-radius: 15px;
+            padding: 4rem;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+        }
+
+        .about-content {
+            background: white;
+            border-radius: 15px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .about-content h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+            align-items: center;
+        }
+
+        .about-grid img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .about-text p {
+            color: var(--text-light);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .team-member {
+            text-align: center;
+            background: var(--light-bg);
+            padding: 2rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+
+        .team-member-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .team-member h4 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .team-member p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* ===== CONTACT PAGE ===== */
+        .contact-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .contact-info, .contact-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-form h2, .contact-info h2 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            min-width: 30px;
+        }
+
+        .contact-details h4 {
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-details p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .data-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--dark-bg);
+            color: white;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            color: var(--text-light);
+        }
+
+        tbody tr:hover {
+            background: var(--light-bg);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(0, 184, 148, 0.2);
+            color: var(--success);
+        }
+
+        .status-pending {
+            background: rgba(253, 203, 110, 0.2);
+            color: var(--warning);
+        }
+        footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            .contact-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                padding: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert-success {
+            background: rgba(0, 184, 148, 0.2);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-top">
+            <div class="logo">🚀 FullStack App</div>
+            <div class="user-info">
+                <span id="userName">Welcome, User</span>
+                <div class="user-avatar" id="userAvatar">U</div>
+            </div>
+        </div>
+
+
+        <nav>
+            <a class="nav-link active" onclick="navigateTo('home')">🏠 Home</a>
+            <a class="nav-link" onclick="navigateTo('about')">ℹ️ About</a>
+            <a class="nav-link" onclick="navigateTo('contact')">📧 Contact</a>
+            <a class="nav-link" onclick="navigateTo('dashboard')">📊 Dashboard</a>
+        </nav>
+    </header>
+
+
+    <div class="container">
+        <div id="home" class="page active">
+            <div class="hero">
+                <h1>Welcome to Full Stack App</h1>
+                <p>A complete, fully functional application with multiple pages and interactive features. Built with vanilla JavaScript, HTML, and CSS.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="navigateTo('about')">Learn More</button>
+                    <button class="btn btn-secondary" onclick="navigateTo('dashboard')">View Dashboard</button>
+                </div>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Beautiful Design</h3>
+                    <p>Modern, responsive UI with smooth animations and gradient backgrounds.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast Performance</h3>
+                    <p>Lightweight and optimized for speed with no external dependencies.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Friendly</h3>
+                    <p>Fully responsive design that works on all devices and screen sizes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>User Friendly</h3>
+                    <p>Intuitive interface with easy navigation and interactive elements.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Easy to Deploy</h3>
+                    <p>Simple to deploy and customize without complex build processes.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Full Featured</h3>
+                    <p>Complete application with forms, tables, and dynamic content.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="about" class="page">
+            <div class="about-content">
+                <h1>About Us</h1>
+                <p>Welcome to our comprehensive Full Stack Application. We're dedicated to creating exceptional web experiences.</p>
+                
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h3 style="color: var(--primary-color); margin-bottom: 1rem;">Our Mission</h3>
+                        <p>We believe in building applications that are not just functional, but also beautiful and user-friendly. Our team is committed to delivering the highest quality solutions.</p>
+                        <p>With years of experience in web development, we combine modern technologies with creative design to create applications that make a difference.</p>
+                        <p>We focus on clean code, performance optimization, and user experience to ensure every project exceeds expectations.</p>
+                    </div>
+                    <div>
+                        <div style="background: var(--primary-color); color: white; padding: 2rem; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 3rem; margin-bottom: 1rem;">💼</div>
+                            <h3>Professional Team</h3>
+                            <p style="margin-top: 1rem;">Experienced developers, designers, and project managers working together to deliver excellence.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="color: var(--primary-color); margin-top: 3rem; margin-bottom: 1.5rem;">Our Team</h2>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <div class="team-member-avatar">👨‍💻</div>
+                        <h4>John Developer</h4>
+                        <p>Full Stack Developer</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-member-avatar">👩‍🎨</div>
+                        <h4>Sarah Designer</h4>
+                        <p>UI/UX Designer</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-member-avatar">👨‍💼</div>
+                        <h4>Mike Manager</h4>
+                        <p>Project Manager</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-member-avatar">👩‍💻</div>
+                        <h4>Emma QA</h4>
+                        <p>QA Specialist</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+ 
+        <div id="contact" class="page">
+            <h1 style="color: white; margin-bottom: 2rem;">Get in Touch</h1>
+            <div class="contact-wrapper">
+                <div class="contact-form">
+                    <h2>Send us a Message</h2>
+                    <div id="formAlert"></div>
+                    <form id="contactForm" onsubmit="handleFormSubmit(event)">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+
+                <div class="contact-info">
+                    <h2>Contact Information</h2>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h4>Address</h4>
+                            <p>123 Tech Street<br>Silicon Valley, CA 94025</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div class="contact-details">
+                            <h4>Phone</h4>
+                            <p>+1 (555) 123-4567</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p>hello@fullstackapp.com</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-item">
+                        <div class="contact-icon">🕐</div>
+                        <div class="contact-details">
+                            <h4>Business Hours</h4>
+                            <p>Mon - Fri: 9:00 AM - 6:00 PM<br>Sat - Sun: Closed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="dashboard" class="page">
+            <h1 style="color: white; margin-bottom: 2rem;">Dashboard</h1>
+
+            <div class="dashboard-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="userCount">1,234</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="projectCount">56</div>
+                    <div class="stat-label">Active Projects</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="taskCount">892</div>
+                    <div class="stat-label">Completed Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="clientCount">89</div>
+                    <div class="stat-label">Happy Clients</div>
+                </div>
+            </div>
+
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Client</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Due Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectsTable">
+                        <tr>
+                            <td>Website Redesign</td>
+                            <td>Acme Corp</td>
+                            <td><span class="status-badge status-success">✓ Completed</span></td>
+                            <td>100%</td>
+                            <td>2026-04-15</td>
+                        </tr>
+                        <tr>
+                            <td>Mobile App Dev</td>
+                            <td>Tech Startup</td>
+                            <td><span class="status-badge status-success">✓ Completed</span></td>
+                            <td>100%</td>
+                            <td>2026-05-20</td>
+                        </tr>
+                        <tr>
+                            <td>E-commerce Platform</td>
+                            <td>RetailCo</td>
+                            <td><span class="status-badge status-pending">⏳ Pending</span></td>
+                            <td>75%</td>
+                            <td>2026-06-10</td>
+                        </tr>
+                        <tr>
+                            <td>API Integration</td>
+                            <td>FinTech Solutions</td>
+                            <td><span class="status-badge status-pending">⏳ Pending</span></td>
+                            <td>50%</td>
+                            <td>2026-07-01</td>
+                        </tr>
+                        <tr>
+                            <td>Cloud Migration</td>
+                            <td>Enterprise Inc</td>
+                            <td><span class="status-badge status-pending">⏳ Pending</span></td>
+                            <td>30%</td>
+                            <td>2026-08-15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#home">Privacy Policy</a>
+                <a href="#home">Terms of Service</a>
+                <a href="#home">Security</a>
+                <a href="#home">Careers</a>
+                <a href="#home">Contact Support</a>
+            </div>
+            <p>&copy; 2026 Full Stack App. All rights reserved.</p>
+            <p>Built with ❤️ using vanilla JavaScript, HTML, and CSS</p>
+        </div>
+    </footer>
+
+    <script>
+
+        function navigateTo(pageName) {
+
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+      
+            document.getElementById(pageName).classList.add('active');
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+
+
+            window.scrollTo(0, 0);
+        }
+
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+
+
+            if (!name || !email || !subject || !message) {
+                alert('Please fill in all fields!');
+                return;
+            }
+
+            const alertDiv = document.getElementById('formAlert');
+            alertDiv.innerHTML = `
+                <div class="alert alert-success">
+                    <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+                    ✓ Thank you! Your message has been sent successfully. We'll get back to you soon!
+                </div>
+            `;
+
+
+            document.getElementById('contactForm').reset();
+
+            setTimeout(() => {
+                alertDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        function updateStats() {
+            document.getElementById('userCount').textContent = Math.floor(Math.random() * 5000 + 1000).toLocaleString();
+            document.getElementById('projectCount').textContent = Math.floor(Math.random() * 200 + 50);
+            document.getElementById('taskCount').textContent = Math.floor(Math.random() * 2000 + 500).toLocaleString();
+            document.getElementById('clientCount').textContent = Math.floor(Math.random() * 200 + 50);
+        }
+
+        function initializeUser() {
+            const userName = localStorage.getItem('userName') || 'User';
+            document.getElementById('userName').textContent = `Welcome, ${userName}`;
+            document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeUser();
+            updateStats();
+        });
+    </script>
+</body>
+</html>
